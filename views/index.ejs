@@ -1,9 +1,27 @@
 <%- include('partials/header.ejs') %>
 
-<body>
-    <main>
+<div class="dashed">
+    <h1>Holiday app!</h1>
+</div>
+<div id="form-container">
+    <form action="/submit" method="POST">
+        <label for ="dest">Where are you going?:</label><br>
+        <input type="text" id="dest" name="dest">
+    </form>
+</div>
+<div id="weather-card" class="dashed">
+    <div id="hflex">
+        <div class="daily-forecast vflex">
+            <div class="temp"></div>
+            <div class="icon"></div>
+        </div>
+        <div class="daily-forecast vflex"></div>
+        <div class="daily-forecast vflex"></div>
+        <div class="daily-forecast vflex"></div>
+        <div class="daily-forecast vflex"></div>
+    </div>
+</div>
 
-        <h1>Hello world!</h1>
 
 
 <%- include('partials/footer.ejs') %>K

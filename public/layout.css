@@ -1,0 +1,17 @@
+body {
+    background-color: aqua;
+}
+
+.dashed {
+    border-width: 1px;
+    border-style: dashed;
+}
+
+.hflex {
+    display: flex;
+}
+
+#vflex {
+    display: flex;
+    flex-direction: column;
+}
