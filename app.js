@@ -4,13 +4,14 @@ import express from "express";
 import bodyParser from "body-parser";
 import axios from "axios";
 import morgan from "morgan";
+import { returnLocations } from "./utils.js";
 
 // Server config
 const app = express();
 const port = 3000;
 
 // Variables
-const weatherKey = "7b9892b86cf7be15ae7b9085bd8036f8";
+const weatherKey = "";
 
 // Middleware
 app.use(express.static("public"));
@@ -28,16 +29,13 @@ app.post("/submit", async (req, res) => {
 
     try {
         const response = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${dest}&limit=5&appid=${weatherKey}`)
-        res.render('index.ejs', {content: JSON.stringify(response.data)});
+        // res.render('index.ejs', {content: JSON.stringify(response.data)});
+        const result = returnLocations(response.data);
+        console.log(result);
     } catch (error) {
         console.log(error);
+        res.status(500);
     }
-
-    res.render('index.ejs', )
-
-
-    
-
 })
 
 app.listen(port, () => {
