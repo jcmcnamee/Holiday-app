@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 import * as utils from './utils.js';
-import apiKey from './config.js';
+import { apiKey } from './config.js';
 
 // POST controllers
 export async function submitDest(req, res) {
@@ -43,8 +43,7 @@ export async function chooseDest(req, res) {
       }&units=metric&appid=${apiKey}`
     );
 
-    locData.addForecast(response.data.list);
-    console.log(locData.forecast);
+    locData.addForecasts(response.data.list);
   } catch (err) {
     console.error(err.data);
     res.status(500);
@@ -59,14 +58,27 @@ export async function chooseDest(req, res) {
 const locData = {
   index: 0,
   locations: [],
-  forecast: [],
+  dailyForecasts: [],
 
-  addForecast: function (forecast) {
-    for (let i in forecast) {
-      this.forecast.push({
-        temp: forecast[i].main.temp,
-        feels: forecast[i].main.feels_like,
+  addForecasts: function (forecasts) {
+    let days = [];
+    for (let forecast of forecasts) {
+      const day = new Date(forecast.dt_txt);
+      days.push(day.getDate());
+    }
+
+    // Make a new object for each day to be displayed
+    days = [...new Set(days)];
+    for (let day of days) {
+      this.dailyForecasts.push({
+        day,
+        hourlyForecast: {
+          temp: 0,
+          weather: 'cloudy',
+        },
       });
     }
+
+    console.log(this);
   },
 };
