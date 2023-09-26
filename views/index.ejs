@@ -1,43 +1,41 @@
 <%- include('partials/header.ejs') %>
 
 <div class="dashed">
-    <h1>Holiday app!</h1>
+  <h1>Holiday app!</h1>
 </div>
 <div id="form-container">
-    <form action="/submit" method="POST">
-        <label for="dest">Where are you going?:</label><br>
-        <input type="text" id="dest" name="dest">
-    </form>
-    <% if (locals.countries) { %>
-        <% countries = JSON.parse(countries); %>
-        <% console.log(countries); %>
-        <% if (countries.length > 1) { %>
-            <br>
-            <form action="/chooseCountry" method="POST">
-            <label for="choice"><%= countries.length %> options found:</label>
-            <select id="choice" name="country" onchange="this.form.submit()">
-            <% for (let country of countries) { %>
-                    <option value="<%= country.country %>"><%= country.country %></option>
-            <% } %>
-            </select>
-        <% } else { %>
-     <% } %>
-    </form>
-    <% } %>
+  <form action="/submit" method="POST">
+    <label for="dest">Where are you going?:</label><br />
+    <input type="text" id="dest" name="dest" />
+  </form>
+  <% if (locals.countries) { %> <% countries = JSON.parse(countries); %> <%
+  console.log(countries); %> <% if (countries.length > 1) { %>
+  <br />
+  <form action="/submit/chooseCountry" method="POST">
+    <label for="choice"><%= countries.length %> options found:</label>
+    <select id="choice" name="countryIndex" onchange="this.form.submit()">
+      <% for (let i in countries) { %>
+      <option value="<%= i %>">
+        <%= countries[i].name %>, <%= countries[i].countryFullName %>
+      </option>
+      <% } %>
+      <input type="submit" value="Submit!" />
+    </select>
+    <% } else { %> <% } %>
+  </form>
+  <% } %>
 </div>
 <div id="weather-card" class="dashed">
-    <div id="hflex">
-        <div class="daily-forecast vflex">
-            <div class="temp"></div>
-            <div class="icon"></div>
-        </div>
-        <div class="daily-forecast vflex"></div>
-        <div class="daily-forecast vflex"></div>
-        <div class="daily-forecast vflex"></div>
-        <div class="daily-forecast vflex"></div>
+  <div id="hflex">
+    <div class="daily-forecast vflex">
+      <div class="temp"></div>
+      <div class="icon"></div>
     </div>
+    <div class="daily-forecast vflex"></div>
+    <div class="daily-forecast vflex"></div>
+    <div class="daily-forecast vflex"></div>
+    <div class="daily-forecast vflex"></div>
+  </div>
 </div>
-
-
 
 <%- include('partials/footer.ejs') %>K
