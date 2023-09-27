@@ -60,25 +60,17 @@ const locData = {
   locations: [],
   dailyForecasts: [],
 
-  addForecasts: function (forecasts) {
-    let days = [];
-    for (let forecast of forecasts) {
-      const day = new Date(forecast.dt_txt);
-      days.push(day.getDate());
-    }
+  getDates: function (dateStr) {
+    const date = new Date(dateStr);
+    const day = date.getDate();
+    const hour = date.getHours();
+    return { day, hour };
+  },
 
-    // Make a new object for each day to be displayed
-    days = [...new Set(days)];
-    for (let day of days) {
-      this.dailyForecasts.push({
-        day,
-        hourlyForecast: {
-          temp: 0,
-          weather: 'cloudy',
-        },
-      });
-    }
+  getWeather: function () {},
 
-    console.log(this);
+  addForecasts: function (forecastArr) {
+    let dates = forecastArr.map(forecast => forecast.dt_txt);
+    this.dailyForecasts = dates.map(this.getDates);
   },
 };
