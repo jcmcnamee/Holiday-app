@@ -60,17 +60,41 @@ const locData = {
   locations: [],
   dailyForecasts: [],
 
-  getDates: function (dateStr) {
-    const date = new Date(dateStr);
-    const day = date.getDate();
-    const hour = date.getHours();
-    return { day, hour };
-  },
-
-  getWeather: function () {},
-
   addForecasts: function (forecastArr) {
+    // Get date string for each forecast
     let dates = forecastArr.map(forecast => forecast.dt_txt);
-    this.dailyForecasts = dates.map(this.getDates);
+
+    // Parse into workable units
+    dates = dates.map(dateStr => {
+      const date = new Date(dateStr);
+      const day = date.getDate();
+      const hour = date.getHours();
+      return { day, hour };
+    });
+
+    // Get weather for each forecast
+    let tempData = forecastArr.map(forecast => forecast.main.temp);
+    let weatherIcons = forecastArr.map(forecast => forecast.weather.icon);
+    let windData = forecastArr.map(forecast => forecast.wind.speed);
+
+    // Marry with dates
+    dates.forEach((date, index) => {
+      date.forecast = {};
+      date.forecast.temp = tempData[index];
+      date.forecast.weather = weatherIcons[index];
+      date.forecast.windData = windData[index];
+    });
+
+    // Get unique days forecast
+    this.dailyForecasts = [...new Set(dates.map(date => date.day))];
+    console.log(`Daily forecasts: ${this.dailyForecasts}`);
+    console.log(dates.filter(date => date.day === 28));
+
+    //
+    this.dailyForecasts = this.dailyForecasts.map(forecast => {
+      return dates.filter(date => date.day === forecast);
+    });
+
+    console.log(this.dailyForecasts);
   },
 };
