@@ -11,7 +11,7 @@
   <% if (locals.countries) { %> <% countries = JSON.parse(countries); %> <%
   console.log(countries); %> <% if (countries.length > 1) { %>
   <br />
-  <form action="/submit/chooseCountry" method="POST">
+  <form action="/chooseCountry" method="POST">
     <label for="choice"><%= countries.length %> options found:</label>
     <select id="choice" name="countryIndex" onchange="this.form.submit()">
       <% for (let i in countries) { %>
@@ -25,17 +25,19 @@
   </form>
   <% } %>
 </div>
-<div id="weather-card" class="dashed">
-  <div id="hflex">
+<div id="weather-card" class="dashed grid">
+  <button></button>
+  <div id="week-container" class="hflex dotted">
+    <% if (locals.forecasts) { %> <% forecasts = JSON.parse(forecasts); %> <%
+    for ( i in forecasts[0]) { %>
     <div class="daily-forecast vflex">
-      <div class="temp"></div>
-      <div class="icon"></div>
+      <div class="temp"><%= forecasts[0][i].forecast.temp %></div>
+      <div class="weather-icon"></div>
+      <div class="hour"><%= forecasts[0][i].hour %></div>
     </div>
-    <div class="daily-forecast vflex"></div>
-    <div class="daily-forecast vflex"></div>
-    <div class="daily-forecast vflex"></div>
-    <div class="daily-forecast vflex"></div>
+    <% } %> <% } %>
   </div>
+  <button></button>
 </div>
 
 <%- include('partials/footer.ejs') %>K

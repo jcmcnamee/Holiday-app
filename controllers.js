@@ -4,7 +4,8 @@ import axios from 'axios';
 import * as utils from './utils.js';
 import { apiKey } from './config.js';
 
-// POST controllers
+// POST controllers //
+// OpenWeather Geolocation API call
 export async function submitDest(req, res) {
   const dest = req.body.dest;
 
@@ -23,46 +24,48 @@ export async function submitDest(req, res) {
     });
 
     // Update handler
-    locData.locations = locationGeoData;
+    weatherHandler.locations = locationGeoData;
   } catch (err) {
     console.error(err.data);
     res.status(500);
   }
 }
 
+// OpenWeather get forecasts API call
 export async function chooseDest(req, res) {
-  locData.index = req.body.countryIndex;
+  weatherHandler.index = req.body.countryIndex;
 
   try {
     // OpenWeather API call
     const response = await axios.get(
       `http://api.openweathermap.org/data/2.5/forecast?lat=${
-        locData.locations[locData.index].lat
+        weatherHandler.locations[weatherHandler.index].lat
       }&lon=${
-        locData.locations[locData.index].lon
+        weatherHandler.locations[weatherHandler.index].lon
       }&units=metric&appid=${apiKey}`
     );
 
-    locData.addForecasts(response.data.list);
+    // Pass data to weather handler object
+    weatherHandler.addForecasts(response.data.list);
+
+    // Send forecast data to front end
+    res.render('index.ejs', {
+      forecasts: JSON.stringify(weatherHandler.dailyForecasts),
+    });
   } catch (err) {
     console.error(err.data);
     res.status(500);
   }
-
-  //   res.render('index.js', {
-  //     destination: locData.locations[locData.index],
-  //   });
 }
 
 // local controllers
-const locData = {
-  index: 0,
+const weatherHandler = {
   locations: [],
   dailyForecasts: [],
 
-  addForecasts: function (forecastArr) {
+  addForecasts: function (allForecasts) {
     // Get date string for each forecast
-    let dates = forecastArr.map(forecast => forecast.dt_txt);
+    let dates = allForecasts.map(forecast => forecast.dt_txt);
 
     // Parse into workable units
     dates = dates.map(dateStr => {
@@ -73,28 +76,26 @@ const locData = {
     });
 
     // Get weather for each forecast
-    let tempData = forecastArr.map(forecast => forecast.main.temp);
-    let weatherIcons = forecastArr.map(forecast => forecast.weather.icon);
-    let windData = forecastArr.map(forecast => forecast.wind.speed);
+    let tempData = allForecasts.map(forecast => forecast.main.temp);
+    let weatherIcons = allForecasts.map(forecast => forecast.weather.icon);
+    let windData = allForecasts.map(forecast => forecast.wind.speed);
 
     // Marry with dates
     dates.forEach((date, index) => {
-      date.forecast = {};
-      date.forecast.temp = tempData[index];
-      date.forecast.weather = weatherIcons[index];
-      date.forecast.windData = windData[index];
+      date.forecast = {
+        temp: tempData[index],
+        weather: weatherIcons[index],
+        wind: windData[index],
+      };
     });
 
     // Get unique days forecast
     this.dailyForecasts = [...new Set(dates.map(date => date.day))];
-    console.log(`Daily forecasts: ${this.dailyForecasts}`);
-    console.log(dates.filter(date => date.day === 28));
 
     //
     this.dailyForecasts = this.dailyForecasts.map(forecast => {
       return dates.filter(date => date.day === forecast);
     });
-
-    console.log(this.dailyForecasts);
+    console.log(this.dailyForecasts[0][1]);
   },
 };
