@@ -8,8 +8,8 @@
     <label for="dest">Where are you going?:</label><br />
     <input type="text" id="dest" name="dest" />
   </form>
-  <% if (locals.countries) { %> <% countries = JSON.parse(countries); %> <%
-  console.log(countries); %> <% if (countries.length > 1) { %>
+  <% if (locals.countries) { countries = JSON.parse(countries); if
+  (countries.length > 1) { %>
   <br />
   <form action="/chooseCountry" method="POST">
     <label for="choice"><%= countries.length %> options found:</label>
@@ -21,7 +21,7 @@
       <% } %>
       <input type="submit" value="Submit!" />
     </select>
-    <% } else { %> <% } %>
+    <% } else { } %>
   </form>
   <% } %>
 </div>

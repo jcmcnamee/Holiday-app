@@ -96,6 +96,5 @@ const weatherHandler = {
     this.dailyForecasts = this.dailyForecasts.map(forecast => {
       return dates.filter(date => date.day === forecast);
     });
-    console.log(this.dailyForecasts[0][1]);
   },
 };

@@ -4,12 +4,15 @@ import express from 'express';
 import bodyParser from 'body-parser';
 // import axios from "axios";
 import morgan from 'morgan';
+import debug from 'debug';
 import * as controllers from './controllers.js';
 // import { isoToCountry, submitDest } from "./utils.js";
 
 // Server config
 const app = express();
 const port = 3000;
+const logger = debug('app');
+
 app.set('view engine', 'ejs');
 
 // Middleware
